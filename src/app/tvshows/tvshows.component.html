@@ -6,7 +6,7 @@
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-2" *ngFor="let tvshow of tvshows | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" (click)="openTVShowDetails(tvshow.id)">
-            <img [src]="'https://image.tmdb.org/t/p/original' + tvshow.psoter_path" class="w-100" alt="TV Show Picture">
+            <img [src]="'https://image.tmdb.org/t/p/w342' + tvshow.psoter_path" class="w-100" alt="TV Show Picture">
             <p class="text-white mt-3" style="font-size: 18px"><b>{{ tvshow.name }}</b></p>
         </div>
     </div>

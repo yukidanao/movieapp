@@ -1,7 +1,7 @@
 <div class="container mt-5" *ngIf="series">
     <div class="movie-container">
       <div class="movie-details">
-        <img [src]="'https://image.tmdb.org/t/p/original' + series.poster_path" alt="Movie Picture" class="movie-image">
+        <img [src]="'https://image.tmdb.org/t/p/w500' + series.poster_path" alt="Movie Picture" class="movie-image">
         <div class="movie-info">
           <h1 class="text-white"><b>{{ series.original_name }}</b></h1>
           <p style="color: #9ACD32">{{ series.overview }}</p>
@@ -50,7 +50,7 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-md-2" *ngFor="let series of getSlicedSeries()" (click)="navigateToSeries(series.id)">
-        <img [src]="'https://image.tmdb.org/t/p/original' + series.poster_path" class="w-100" alt="Movie Picture">
+        <img [src]="'https://image.tmdb.org/t/p/w342' + series.poster_path" class="w-100" alt="Movie Picture">
         <p class="text-white mt-3" style="font-size: 18px"><b>{{ series.original_name }}</b></p>
         <p class="text-white">{{ series.release_date }}</p>
       </div>

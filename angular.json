@@ -30,6 +30,9 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "dotenv"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
