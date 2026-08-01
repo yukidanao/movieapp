@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'; // Import DomSanitizer and SafeResourceUrl
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,13 +12,13 @@ import { Router } from '@angular/router';
 export class PlayerComponent implements OnInit {
   movie: any;
   genres: any = {};
-  movieUrl: SafeResourceUrl | null = null; // Change type to SafeResourceUrl
+  movieUrl: SafeResourceUrl | null = null; 
   popularMovies: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private dataService: DataService,
-    private sanitizer: DomSanitizer, // Inject DomSanitizer
+    private sanitizer: DomSanitizer, 
     private router: Router
   ) {}
 
@@ -37,7 +37,7 @@ export class PlayerComponent implements OnInit {
   loadMovieDetails(id: number) {
     this.getMovieDetails(id);
     this.movieUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://vidsrc.to/embed/movie/${id}`
+      `https://vidsrc.sbs/embed/movie/${id}`
     );
   }
 

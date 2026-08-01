@@ -30,25 +30,25 @@ export class HomeComponent implements OnInit {
 
   //movies
   getMovies() {
-    this.dataService.getMovies().subscribe((data: any) => {
+    this.dataService.getMovies().subscribe((data: any[]) => {
       this.movies = data;
     });
   }
 
   getPopularMovies() {
-    this.dataService.getPopularMovies().subscribe((data: any) => {
+    this.dataService.getPopularMovies().subscribe((data: any[]) => {
       this.popularMovies = data;
     });
   }
 
   getTopRatedMovies() {
-    this.dataService.getTopRatedMovies().subscribe((data: any) => {
+    this.dataService.getTopRatedMovies().subscribe((data: any[]) => {
       this.topRatedMovies = data;
     });
   }
 
   getGenres() {
-    this.dataService.getGenreList().subscribe((data: any) => {
+    this.dataService.getGenreList().subscribe((data: any[]) => {
       this.genres = data.reduce((acc: any, genre: any) => {
         acc[genre.id] = genre.name;
         return acc;
@@ -57,23 +57,29 @@ export class HomeComponent implements OnInit {
   }
 
   getSlicedMovies() {
-    return this.shuffleArray(this.movies).slice(0, 6);
+    return this.getSlicedItems(this.movies);
   }
 
   getSlicedPopularMovies() {
-    return this.shuffleArray(this.popularMovies).slice(0, 6);
+    return this.getSlicedItems(this.popularMovies);
+  }
+
+  private getSlicedItems(items: any[] = []): any[] {
+    const safeItems = Array.isArray(items) ? items : [];
+    return this.shuffleArray([...safeItems]).slice(0, 6);
   }
 
   private shuffleArray(array: any[]): any[] {
-    for (let i = array.length - 1; i > 0; i--) {
+    const clonedArray = [...array];
+    for (let i = clonedArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+      [clonedArray[i], clonedArray[j]] = [clonedArray[j], clonedArray[i]];
     }
-    return array;
+    return clonedArray;
   }
 
   getSlicedTopRatedMovies() {
-    return this.shuffleArray(this.topRatedMovies).slice(0, 6);
+    return this.getSlicedItems(this.topRatedMovies);
   }
 
   getGenreNames(genreIds: number[]): string {
@@ -82,13 +88,13 @@ export class HomeComponent implements OnInit {
 
   //tvshows
   getTVShows() {
-    this.dataService.getTVShows().subscribe((data: any) => {
+    this.dataService.getTVShows().subscribe((data: any[]) => {
       this.tvShows = data;
     });
   }
 
   getSlicedTVShows() {
-    return this.shuffleArray(this.tvShows).slice(0, 6);
+    return this.getSlicedItems(this.tvShows);
   }
 
   // search
@@ -96,10 +102,8 @@ export class HomeComponent implements OnInit {
     this.searchInitiated = true;
     const movieName = this.searchControl.value;
     if (movieName) {
-      this.dataService.searchMovieByName(movieName).subscribe((data: any) => {
+      this.dataService.searchMovieByName(movieName).subscribe((data: any[]) => {
         this.searchResults = data;
-        console.log("Searching for:", movieName);
-        console.log(this.searchResults);
       });
     }
   }

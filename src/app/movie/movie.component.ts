@@ -13,6 +13,7 @@ export class MovieComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 12;
   selectedGenre: number | null = null;
+  imageurl: string = 'https://image.tmdb.org/t/p/w500/';
 
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) { }
 

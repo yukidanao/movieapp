@@ -5,7 +5,7 @@
 <div class="container mt-5">
     <div *ngIf="movie" class="movie-container">
         <div class="movie-details">
-            <img [src]="movie.profile_pictureURL" alt="Movie Picture" class="movie-image">
+            <img [src]="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Picture" class="movie-image">
             <div class="movie-info">
                 <h1 class="text-white"><b>{{ movie.title }}</b></h1>
                 <p style="color: #9ACD32">{{ movie.overview }}</p>
@@ -32,7 +32,7 @@
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-2" *ngFor="let movie of getSlicedPopularMovies()" (click)="openMovieDetails(movie.id)">
-            <img [src]="movie.profile_picture_url" class="w-100" alt="Movie Picture">
+            <img [src]="'https://image.tmdb.org/t/p/original' + movie.poster_path" class="w-100" alt="Movie Picture">
             <p class="text-white mt-3" style="font-size: 18px"><b>{{ movie.title }}</b></p>
             <p class="text-white">{{ movie.release_date }}</p>
         </div>

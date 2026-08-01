@@ -4,6 +4,9 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import AppServerModule from './src/main.server';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -17,8 +20,36 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
+  server.get('/api/*', async (req, res) => {
+    const tmdbToken = process.env['TMDB_ACCESS_TOKEN'] || process.env['TMDB_API_KEY'];
+
+    if (!tmdbToken) {
+      res.status(500).json({ error: 'TMDB token is not configured on the server.' });
+      return;
+    }
+
+    const targetPath = req.path.replace(/^\/api/, '');
+    const queryString = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    const upstreamUrl = new URL(`https://api.themoviedb.org/3${targetPath}${queryString}`);
+
+    try {
+      const response = await fetch(upstreamUrl, {
+        headers: {
+          Authorization: `Bearer ${tmdbToken}`,
+          accept: 'application/json',
+        },
+      });
+
+      const body = await response.text();
+      res.status(response.status);
+      res.setHeader('content-type', response.headers.get('content-type') ?? 'application/json');
+      res.send(body);
+    } catch (error) {
+      console.error('TMDB proxy error:', error);
+      res.status(502).json({ error: 'Failed to reach TMDB.' });
+    }
+  });
+
   // Serve static files from /browser
   server.get('*.*', express.static(browserDistFolder, {
     maxAge: '1y'

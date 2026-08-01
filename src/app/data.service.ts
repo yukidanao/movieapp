@@ -1,58 +1,100 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  private baseUrl = 'https://movieapp-zyqr.onrender.com/api/v1';
+  private baseUrl = '/api';
 
   constructor(private http: HttpClient) { }
 
-  //movies
-  getMovies() {
-    return this.http.get('https://movieapp-zyqr.onrender.com/api/v1/nowplayingmovies');
+  // Movies
+
+  getMovies(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/movie/now_playing`).pipe(
+      map((response: any) => this.extractResults(response))
+    );
   }
 
   getMovieDetails(id: number) {
-    return this.http.get(`https://movieapp-zyqr.onrender.com/api/v1/details/${id}`);
+    return this.http.get(`${this.baseUrl}/movie/${id}`);
   }
 
   getGenre(id: number) {
-    return this.http.get('https://movieapp-zyqr.onrender.com/api/v1/genre/' + id);
+    return this.http.get(
+      `${this.baseUrl}/discover/movie?with_genres=${id}`
+    );
   }
 
-  getGenreList() {
-    return this.http.get('https://movieapp-zyqr.onrender.com/api/v1/genre_list');
+  getGenreList(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/genre/movie/list`).pipe(
+      map((response: any) => this.extractResults(response, 'genres'))
+    );
   }
 
-  getPopularMovies() {
-    return this.http.get('https://movieapp-zyqr.onrender.com/api/v1/popular');
+  getPopularMovies(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/movie/popular`).pipe(
+      map((response: any) => this.extractResults(response))
+    );
   }
 
-  getTopRatedMovies() {
-    return this.http.get('https://movieapp-zyqr.onrender.com/api/v1/toprated_movies');
+  getTopRatedMovies(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/movie/top_rated`).pipe(
+      map((response: any) => this.extractResults(response))
+    );
   }
 
-  //tvshows
-  getTVShows() {
-    return this.http.get('https://movieapp-zyqr.onrender.com/api/v2/tvshows');
+  // TV Shows
+
+  getTVShows(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/tv/popular`).pipe(
+      map((response: any) => this.extractResults(response))
+    );
   }
 
   getTVShowDetails(id: number) {
-    return this.http.get(`https://movieapp-zyqr.onrender.com/api/v2/tvshows_overview/${id}`);
+    return this.http.get(`${this.baseUrl}/tv/${id}`);
   }
 
-  // search
-  searchMovieByName(movieName: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/movie_name/${movieName}`);
+  // Search
+
+  searchMovieByName(movieName: string): Observable<any[]> {
+    return this.http.get<any>(
+      `${this.baseUrl}/search/movie?query=${encodeURIComponent(movieName)}`
+    ).pipe(
+      map((response: any) => this.extractResults(response))
+    );
   }
 
-  //filter by genre
-  filterByGenre(id: number): Observable<any> {
-    return this.http.get(`https://movieapp-zyqr.onrender.com/api/v1/genre/${id}`);
+  // Filter by Genre
+
+  filterByGenre(id: number): Observable<any[]> {
+    return this.http.get<any>(
+      `${this.baseUrl}/discover/movie?with_genres=${id}`
+    ).pipe(
+      map((response: any) => this.extractResults(response))
+    );
+  }
+
+  private extractResults(response: any, key: string = 'results'): any[] {
+    if (Array.isArray(response)) {
+      return response;
+    }
+
+    if (response && typeof response === 'object') {
+      if (Array.isArray(response[key])) {
+        return response[key];
+      }
+
+      if (Array.isArray(response.results)) {
+        return response.results;
+      }
+    }
+
+    return [];
   }
 
 }
