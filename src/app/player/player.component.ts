@@ -37,7 +37,7 @@ export class PlayerComponent implements OnInit {
   loadMovieDetails(id: number) {
     this.getMovieDetails(id);
     this.movieUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://vidsrc-embed.ru/embed/movie/${id}`
+      `https://vidsrc.sbs/embed/movie/${id}`
     );
   }
 
